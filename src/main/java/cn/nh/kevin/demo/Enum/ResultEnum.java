@@ -1,5 +1,8 @@
 package cn.nh.kevin.demo.Enum;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 标题:
  * 描述:
@@ -17,4 +20,5 @@ public enum ResultEnum {
 		this.text = ttext;
 
 	}
+
 }
