@@ -1,4 +1,4 @@
-package cn.nh.kevin.demo.Exception;
+package cn.nh.kevin.demo.Exception.DefineException;
 
 /**
  * 标题:

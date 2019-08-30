@@ -25,76 +25,71 @@ public class LoginService {
 	@Autowired
 	private UserMapper userMapper;
 
-
 	/**
-	 * @Description //登录验证
-	 * @Author xck
-	 * @Date 2019/8/28 15:30
 	 * @param id
 	 * @param password
 	 * @return java.lang.String
+	 * @Description //登录验证
+	 * @Author xck
+	 * @Date 2019/8/28 15:30
 	 **/
 	public ResultDTO check(String id, String password) {
 
 		String Message;
 		if (id == null) {
 			Message = "账户不能为空";
-			return new ResultDTO(ResultEnum.FAIL,Message);
+			return new ResultDTO(ResultEnum.FAIL, Message);
 
-		}
-		else if (password == null)
-		{
+		} else if (password == null) {
 			Message = "密码不能为空";
 
-			return new ResultDTO(ResultEnum.FAIL,Message);
-		}
-		else{
+			return new ResultDTO(ResultEnum.FAIL, Message);
+		} else {
 			UserDTO userDTO = userMapper.findUser(id);
-			if (userDTO.getPassword().equals(password)){
+			if (userDTO.getPassword().equals(password)) {
 				Message = "验证成功";
-				return new ResultDTO(ResultEnum.SUCCESS,Message);
+				return new ResultDTO(ResultEnum.SUCCESS, Message);
 
-			}
-			else {
-				Message ="密码错误";
-				return new ResultDTO(ResultEnum.FAIL,Message);
+			} else {
+				Message = "密码错误";
+				return new ResultDTO(ResultEnum.FAIL, Message);
 			}
 		}
 
 	}
 
 	/**
+	 * @param userDTO
+	 * @return cn.nh.kevin.demo.Enum.ResultEnum
 	 * @Description //注册
 	 * @Author xck
 	 * @Date 2019/8/28 15:30
-	 * @param userDTO
-	 * @return cn.nh.kevin.demo.Enum.ResultEnum
 	 **/
 	public ResultEnum register(UserDTO userDTO) {
 
-		LOGGER.info("id为{}",userDTO.getId());
+		LOGGER.info("id为{}", userDTO.getId());
 		try {
 			userMapper.insertUser(userDTO);
-		}catch (Exception e){
-			if (e instanceof DuplicateKeyException){
-				LOGGER.error("id={},已存在",userDTO.getId());
+		} catch (Exception e) {
+			if (e instanceof DuplicateKeyException) {
+				LOGGER.error("id={},已存在", userDTO.getId());
 				throw e;
-			}
-			else{
-				LOGGER.error("注册id={}异常",userDTO.getId());
+			} else {
+				LOGGER.error("注册id={}异常", userDTO.getId());
 			}
 		}
 
 		return ResultEnum.SUCCESS;
 	}
+
 	/**
+	 * @param id
+	 * @return cn.nh.kevin.demo.DTO.UserDTO
 	 * @Description //查询信息
 	 * @Author xck
 	 * @Date 2019/8/28 15:31
-	 * @param id
-	 * @return cn.nh.kevin.demo.DTO.UserDTO
 	 **/
-	public UserDTO queryById(String id){
+	public UserDTO queryById(String id) {
 		return userMapper.findUser(id);
 	}
 }
