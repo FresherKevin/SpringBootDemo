@@ -53,7 +53,7 @@ public class UserControllerAop {
 		value = value+"_passAOP";
 		nameValue = nameValue + "_passAOP";
 
-		request.setAttribute("name",value);
+		request.setAttribute("name",nameValue);
 		LOGGER.info("name经过AOP之后是{}",nameValue);
 	}
 }
