@@ -1,4 +1,4 @@
-package cn.nh.kevin.demo.Controller;
+package cn.nh.kevin.demo.Exception.ExceptionDeal;
 
 import cn.nh.kevin.demo.DTO.ResultDTO;
 import cn.nh.kevin.demo.Enum.ResultEnum;
@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 标题:
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ServiceControllerAdvice {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceControllerAdvice.class);
 
-
+    @ResponseBody
     @ExceptionHandler({ChannleException.class})
     public ResultDTO exceptionHandle(Exception e){
         LOGGER.info("Channel异常处理");

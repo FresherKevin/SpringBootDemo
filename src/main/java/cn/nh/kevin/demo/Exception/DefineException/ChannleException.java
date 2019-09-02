@@ -1,5 +1,7 @@
 package cn.nh.kevin.demo.Exception.DefineException;
 
+import lombok.Data;
+
 /**
  * 标题: 渠道校验异常
  * 描述:
@@ -7,6 +9,7 @@ package cn.nh.kevin.demo.Exception.DefineException;
  * 作者: xck
  * 时间: 2019-08-30 15:13
  */
+@Data
 public class ChannleException extends Exception{
 
     private String errorcode;

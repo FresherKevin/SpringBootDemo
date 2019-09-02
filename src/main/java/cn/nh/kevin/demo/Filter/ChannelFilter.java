@@ -1,10 +1,14 @@
 package cn.nh.kevin.demo.Filter;
 
 import cn.nh.kevin.demo.Exception.DefineException.ChannleException;
+import cn.nh.kevin.demo.Exception.ExceptionDeal.FilterErrorReturn;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -18,6 +22,9 @@ import java.io.IOException;
 @WebFilter(urlPatterns = "/admin/*", filterName = "ChannelFilter")
 public class ChannelFilter implements Filter {
 
+    @Autowired
+    private FilterErrorReturn error;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -25,11 +32,14 @@ public class ChannelFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException{
-        filterChain.doFilter(servletRequest,servletResponse);
         log.info("到达过滤成功：时间：{}",System.currentTimeMillis());
-        String Channel = servletRequest.getParameter("Channel");
+        HttpServletRequest req = (HttpServletRequest) servletRequest;
+        HttpServletResponse rep = (HttpServletResponse) servletResponse;
+        String Channel = null;
+        Channel = req.getHeader("Channel");
         if (!Channel.equals("NUAA")){
-            throw new ChannleException("渠道非法","100");
+            error.dealFilterError(req,rep,new ChannleException("非法渠道，请核实","886"));
+            return;
         }
         filterChain.doFilter(servletRequest,servletResponse);
     }
