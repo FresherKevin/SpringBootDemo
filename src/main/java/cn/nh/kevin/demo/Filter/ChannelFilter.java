@@ -1,9 +1,7 @@
 package cn.nh.kevin.demo.Filter;
 
-import cn.nh.kevin.demo.DTO.UserDTO;
 import cn.nh.kevin.demo.Exception.DefineException.ChannleException;
 import cn.nh.kevin.demo.Exception.ExceptionDeal.FilterErrorReturn;
-import cn.nh.kevin.demo.Filter.GetBody.GetBodyHttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,8 +42,7 @@ public class ChannelFilter implements Filter {
             return;
         }
         filterChain.doFilter(req,resp);
-        UserDTO userDTO = GetBodyHttpServletRequest.getInstance(req).doChange(UserDTO.class);
-
+        //UserDTO userDTO = GetBodyHttpServletRequest.getInstance(req).doChange(UserDTO.class);
     }
 
     @Override

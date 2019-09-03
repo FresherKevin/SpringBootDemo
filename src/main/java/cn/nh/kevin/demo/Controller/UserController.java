@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 /**
- * 标题:
+ * 标题:用户登录注册控制器
  * 描述:
  * 版权: Kevin
  * 作者: xck
@@ -40,14 +43,21 @@ public class UserController {
 
 	//@ResponseBody
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
-	public ModelAndView login(@RequestBody UserDTO user) throws ChannleException {
+	public ModelAndView login(@RequestBody UserDTO user, HttpServletRequest request) throws ChannleException {
 		String id = user.getId();
 		String password = user.getPassword();
 		if(loginService.check(id,password).getResult().equals(ResultEnum.SUCCESS)){
+			HttpSession session = request.getSession();
+			LOGGER.info("session是否缓存",session.getAttribute("user")==null);
+			session.setAttribute("user",user);
 			return new ModelAndView("main");
 		}
 		else return new ModelAndView("error");
 
+	}
+	@RequestMapping(value = "/main")
+	public ModelAndView toMain(){
+		return new ModelAndView("main");
 	}
 
 
