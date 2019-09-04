@@ -4,6 +4,7 @@ import cn.nh.kevin.demo.DTO.ResultDTO;
 import cn.nh.kevin.demo.DTO.UserDTO;
 import cn.nh.kevin.demo.Enum.ResultEnum;
 import cn.nh.kevin.demo.Mapper.UserMapper;
+import cn.nh.kevin.demo.Util.Redis.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Service;
 public class LoginService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginService.class);
+
+	@Autowired
+	private RedisUtil redisUtil;
 
 	@Autowired
 	private UserMapper userMapper;
@@ -48,10 +52,13 @@ public class LoginService {
 			UserDTO userDTO = userMapper.findUser(id);
 			if (userDTO.getPassword().equals(password)) {
 				Message = "验证成功";
+				int count  = (Integer) redisUtil.get(id);
+				LOGGER.info("失败次数{}",count);
 				return new ResultDTO(ResultEnum.SUCCESS, Message);
 
 			} else {
 				Message = "密码错误";
+				redisUtil.set(id,1);
 				return new ResultDTO(ResultEnum.FAIL, Message);
 			}
 		}

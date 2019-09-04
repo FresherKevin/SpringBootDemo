@@ -29,6 +29,7 @@ public class ToMainFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         LOGGER.info("session is {}",request.getSession().getId());
+
         if (request.getSession().getAttribute("user")==null){
             LOGGER.info("tologin");
             String url = request.getRequestURI();
