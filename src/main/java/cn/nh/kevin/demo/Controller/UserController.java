@@ -3,7 +3,6 @@ package cn.nh.kevin.demo.Controller;
 import cn.nh.kevin.demo.DTO.ResultDTO;
 import cn.nh.kevin.demo.DTO.UserDTO;
 import cn.nh.kevin.demo.Enum.ResultEnum;
-import cn.nh.kevin.demo.Exception.DefineException.ChannleException;
 import cn.nh.kevin.demo.Rest.JsonResponse;
 import cn.nh.kevin.demo.Service.LoginService;
 import org.slf4j.Logger;
@@ -43,13 +42,15 @@ public class UserController {
 
 	//@ResponseBody
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
-	public ModelAndView login(@RequestBody UserDTO user, HttpServletRequest request) throws ChannleException {
+	public ModelAndView login(@RequestBody UserDTO user, HttpServletRequest request){
+		LOGGER.info("session is {}",request.getSession().getId());
 		String id = user.getId();
 		String password = user.getPassword();
 		if(loginService.check(id,password).getResult().equals(ResultEnum.SUCCESS)){
 			HttpSession session = request.getSession();
-			LOGGER.info("session是否缓存",session.getAttribute("user")==null);
+			LOGGER.info("session是否缓存{}",session.getAttribute("user")==null);
 			session.setAttribute("user",user);
+			LOGGER.info("id:{}", user.getId());
 			return new ModelAndView("main");
 		}
 		else return new ModelAndView("error");
@@ -58,6 +59,10 @@ public class UserController {
 	@RequestMapping(value = "/main")
 	public ModelAndView toMain(){
 		return new ModelAndView("main");
+	}
+	@RequestMapping(value = "/tologin")
+	public ModelAndView toLogin(){
+		return new ModelAndView("login");
 	}
 
 

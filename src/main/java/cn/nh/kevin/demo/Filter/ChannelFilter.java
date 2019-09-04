@@ -19,8 +19,10 @@ import java.io.IOException;
  * 时间: 2019-08-29 10:57
  */
 @Slf4j
-@WebFilter(urlPatterns = "/admin/register", filterName = "ChannelFilter")
+@WebFilter(urlPatterns = "/admin/login", filterName = "ChannelFilter")
 public class ChannelFilter implements Filter {
+
+    private String ChannelCheck="NUAA";
 
     @Autowired
     private FilterErrorReturn error;
@@ -37,7 +39,7 @@ public class ChannelFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String Channel = null;
         Channel = req.getHeader("Channel");
-        if (!Channel.equals("NUAA")){
+        if (!ChannelCheck.equals(Channel)){
             error.dealFilterError(req,resp,new ChannleException("非法渠道，请核实","886"));
             return;
         }
