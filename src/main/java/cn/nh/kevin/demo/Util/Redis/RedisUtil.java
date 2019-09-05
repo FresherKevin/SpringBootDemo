@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 标题: Redis使用服务类
+ * 标题: Redis使用工具类
  * 描述:
  * 版权: Kevin
  * 作者: xck
