@@ -22,11 +22,8 @@ public class ServiceControllerAdvice {
 
     @ResponseBody
     @ExceptionHandler({ChannleException.class})
-    public ResultDTO exceptionHandle(Exception e){
+    public ResultDTO exceptionHandle(Exception e) {
         LOGGER.info("Channel异常处理");
-        return new ResultDTO(ResultEnum.FAIL,e.getMessage());
+        return new ResultDTO(ResultEnum.FAIL, e.getMessage());
     }
-
-
-
 }

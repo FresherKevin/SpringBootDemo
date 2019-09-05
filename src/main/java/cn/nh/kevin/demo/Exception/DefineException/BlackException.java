@@ -8,8 +8,7 @@ package cn.nh.kevin.demo.Exception.DefineException;
  * 时间: 2019-08-28 16:25
  */
 public class BlackException extends Exception {
-
-	public BlackException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public BlackException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

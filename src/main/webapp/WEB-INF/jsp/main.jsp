@@ -11,6 +11,6 @@
     <title>main</title>
 </head>
 <body>
-    登陆成功,进入主界面
+登陆成功,进入主界面
 </body>
 </html>

@@ -11,6 +11,6 @@
     <title>error</title>
 </head>
 <body>
-    自定义error页面
+自定义error页面
 </body>
 </html>

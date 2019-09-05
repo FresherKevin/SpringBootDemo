@@ -10,7 +10,7 @@ package cn.nh.kevin.demo.Exception.ExceptionDeal;
 public class ExceptionDeal {
     private Exception exception;
 
-    public void deal(Exception e){
+    public void deal(Exception e) {
         exception = e;
     }
 }

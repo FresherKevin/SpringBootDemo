@@ -11,17 +11,17 @@
     <title>这里是登录界面</title>
 </head>
 <body>
-    this is login.jsp
-    <!--
-    <form action="/admin/login" method="post">
-        First name:<br>
-        <input type="text" name="id" value="test9"><br>
-        <input type="text" name="namek" value="xck"><br><br>
-        <input type="text" name="password" value="19980910"><br>
-        <input type="text" name="info" value="hello"><br><br>
-        <input type="submit" name="btn" value="提交">
-    </form>
-    -->
+this is login.jsp
+<!--
+<form action="/admin/login" method="post">
+    First name:<br>
+    <input type="text" name="id" value="test9"><br>
+    <input type="text" name="namek" value="xck"><br><br>
+    <input type="text" name="password" value="19980910"><br>
+    <input type="text" name="info" value="hello"><br><br>
+    <input type="submit" name="btn" value="提交">
+</form>
+-->
 </body>
 <!--
 <script>

@@ -30,61 +30,57 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/admin")
 public class UserController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    @Autowired
+    private LoginService loginService;
 
-	@Autowired
-	private LoginService loginService;
+    @RequestMapping("/index")
+    public ModelAndView getInfo() {
+        return new ModelAndView("index");
+    }
 
-	@RequestMapping("/index")
-	public ModelAndView getInfo(){
-		return new ModelAndView("index");
-	}
+    //@ResponseBody
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView login(@RequestBody UserDTO user, HttpServletRequest request) {
+        LOGGER.info("session is {}", request.getSession().getId());
+        String id = user.getId();
+        String password = user.getPassword();
+        if (loginService.check(id, password).getResult().equals(ResultEnum.SUCCESS)) {
+            HttpSession session = request.getSession();
+            LOGGER.info("session是否缓存{}", session.getAttribute("user") == null);
+            session.setAttribute("user", user);
+            LOGGER.info("id:{}", user.getId());
+            return new ModelAndView("main");
+        } else return new ModelAndView("error");
+    }
 
-	//@ResponseBody
-	@RequestMapping(value = "/login",method = RequestMethod.POST)
-	public ModelAndView login(@RequestBody UserDTO user, HttpServletRequest request){
-		LOGGER.info("session is {}",request.getSession().getId());
-		String id = user.getId();
-		String password = user.getPassword();
-		if(loginService.check(id,password).getResult().equals(ResultEnum.SUCCESS)){
-			HttpSession session = request.getSession();
-			LOGGER.info("session是否缓存{}",session.getAttribute("user")==null);
-			session.setAttribute("user",user);
-			LOGGER.info("id:{}", user.getId());
-			return new ModelAndView("main");
-		}
-		else return new ModelAndView("error");
+    @RequestMapping(value = "/main")
+    public ModelAndView toMain() {
+        return new ModelAndView("main");
+    }
 
-	}
-	@RequestMapping(value = "/main")
-	public ModelAndView toMain(){
-		return new ModelAndView("main");
-	}
-	@RequestMapping(value = "/tologin")
-	public ModelAndView toLogin(){
-		return new ModelAndView("login");
-	}
+    @RequestMapping(value = "/tologin")
+    public ModelAndView toLogin() {
+        return new ModelAndView("login");
+    }
 
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public JsonResponse<ResultDTO> register(@RequestBody UserDTO userDTO) {
+        if (userDTO != null) {
+            LOGGER.info("name 是{}", userDTO.getName());
+            try {
+                loginService.register(userDTO);
+            } catch (DuplicateKeyException e) {
+                return JsonResponse.fail("86613", "id已存在，无需重复注册");
+            } catch (Exception e) {
+                return JsonResponse.fail("8661", "注册失败");
+            }
+            return JsonResponse.success(new ResultDTO(ResultEnum.SUCCESS, "注册成功"));
+        } else return JsonResponse.fail("867", "输入不准为空");
+    }
 
-	@RequestMapping(value = "/register",method = RequestMethod.POST)
-	public JsonResponse<ResultDTO> register(@RequestBody UserDTO userDTO){
-		if (userDTO!=null){
-			LOGGER.info("name 是{}",userDTO.getName());
-			try{
-				loginService.register(userDTO);
-			}catch (DuplicateKeyException e) {
-				return JsonResponse.fail("86613","id已存在，无需重复注册");
-			}catch (Exception e){
-				return JsonResponse.fail("8661","注册失败");
-			}
-			return JsonResponse.success(new ResultDTO(ResultEnum.SUCCESS,"注册成功"));
-		}
-		else return JsonResponse.fail("867","输入不准为空");
-	}
-
-	@RequestMapping(value = "/query",method = RequestMethod.GET)
-	public JsonResponse<UserDTO> queryById(String id){
-		return JsonResponse.success(loginService.queryById(id));
-	}
-
+    @RequestMapping(value = "/query", method = RequestMethod.GET)
+    public JsonResponse<UserDTO> queryById(String id) {
+        return JsonResponse.success(loginService.queryById(id));
+    }
 }

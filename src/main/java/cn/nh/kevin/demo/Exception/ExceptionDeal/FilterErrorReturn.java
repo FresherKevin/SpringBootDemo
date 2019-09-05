@@ -23,13 +23,12 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class FilterErrorReturn {
-
     /**
+     * @param e
+     * @return cn.nh.kevin.demo.DTO.ResultDTO
      * @Description 将自定义异常作为json返回
      * @Author xck
      * @Date 2019/9/2 11:00
-     * @param e
-     * @return cn.nh.kevin.demo.DTO.ResultDTO
      **/
     public void dealFilterError(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {
         log.info("过滤器异常处理");
@@ -38,13 +37,12 @@ public class FilterErrorReturn {
          */
         response.setContentType("application/json; charset=utf-8");
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("Accept-Encoding","");
-        ResultDTO resultDTO = new ResultDTO(ResultEnum.FAIL,e.getMessage());
-        String Json = convertObjectToJson(JsonResponse.fail("88612",e.getMessage()));
+        response.setHeader("Accept-Encoding", "");
+        ResultDTO resultDTO = new ResultDTO(ResultEnum.FAIL, e.getMessage());
+        String Json = convertObjectToJson(JsonResponse.fail("88612", e.getMessage()));
         ServletOutputStream outputStream = response.getOutputStream();
         outputStream.write(Json.getBytes("UTF-8"));
         outputStream.flush();
-
     }
 
     private String convertObjectToJson(Object object) throws JsonProcessingException {

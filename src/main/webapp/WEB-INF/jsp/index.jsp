@@ -11,6 +11,6 @@
     <title>index</title>
 </head>
 <body>
-       index.jsp
+index.jsp
 </body>
 </html>

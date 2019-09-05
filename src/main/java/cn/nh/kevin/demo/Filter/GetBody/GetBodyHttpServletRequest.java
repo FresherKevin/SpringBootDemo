@@ -16,25 +16,23 @@ import java.io.IOException;
  */
 @Data
 public class GetBodyHttpServletRequest {
-
     private static GetBodyHttpServletRequest getBodyHttpServletRequest;
     private HttpServletRequest request;
 
     private GetBodyHttpServletRequest() {
-
     }
 
     /**
+     * @param request
+     * @return cn.nh.kevin.demo.Filter.GetBody.GetBodyHttpServletRequest
      * @Description 懒汉双重判断单例模式
      * @Author xck
      * @Date 2019/9/3 18:24
-     * @param request
-     * @return cn.nh.kevin.demo.Filter.GetBody.GetBodyHttpServletRequest
      **/
     public static GetBodyHttpServletRequest getInstance(HttpServletRequest request) {
-        if (getBodyHttpServletRequest==null){
-            synchronized (GetBodyHttpServletRequest.class){
-                if (getBodyHttpServletRequest==null){
+        if (getBodyHttpServletRequest == null) {
+            synchronized (GetBodyHttpServletRequest.class) {
+                if (getBodyHttpServletRequest == null) {
                     getBodyHttpServletRequest = new GetBodyHttpServletRequest();
                     getBodyHttpServletRequest.setRequest(request);
                 }
@@ -44,22 +42,20 @@ public class GetBodyHttpServletRequest {
     }
 
     /**
+     * @param clazz
+     * @return T
      * @Description 根据Request获取请求参数Body，并转换成响应的DTO
      * @Author xck
      * @Date 2019/9/3 18:23
-     * @param clazz
-     * @return T
      **/
-    public <T>T doChange(Class<T> clazz) throws IOException{
+    public <T> T doChange(Class<T> clazz) throws IOException {
         BufferedReader br = request.getReader();
         String str;
         StringBuilder wholeStr = new StringBuilder();
-        while((str = br.readLine()) != null){
+        while ((str = br.readLine()) != null) {
             wholeStr.append(str);
         }
-        JSONObject.parseObject(wholeStr.toString(),clazz);
-        return (T)JSONObject.parseObject(wholeStr.toString(),clazz);
+        JSONObject.parseObject(wholeStr.toString(), clazz);
+        return (T) JSONObject.parseObject(wholeStr.toString(), clazz);
     }
-
-
 }

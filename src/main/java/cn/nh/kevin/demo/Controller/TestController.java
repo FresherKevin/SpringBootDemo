@@ -2,7 +2,6 @@ package cn.nh.kevin.demo.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 标题:
@@ -14,10 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 @RequestMapping("test")
 public class TestController {
-
-
-	@RequestMapping("index")
-	public String get(){
-		return "indexTTTTT";
-	}
+    @RequestMapping("index")
+    public String get() {
+        return "indexTTTTT";
+    }
 }

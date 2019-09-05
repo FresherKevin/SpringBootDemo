@@ -14,11 +14,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ResultDTO {
-	private ResultEnum result;
-	private String Message;
+    private ResultEnum result;
+    private String Message;
 
-	public ResultDTO(ResultEnum result, String message) {
-		this.result = result;
-		this.Message = message;
-	}
+    public ResultDTO(ResultEnum result, String message) {
+        this.result = result;
+        this.Message = message;
+    }
 }
