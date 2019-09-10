@@ -24,7 +24,6 @@ public class RedisUtil {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-
     /**
      * @param keys
      * @return void
@@ -122,7 +121,7 @@ public class RedisUtil {
     public boolean set(String key, Object value, long time) {
         try {
             if (time > 0) {
-                redisTemplate.opsForValue().set(key, value, time);
+                redisTemplate.opsForValue().set(key, value, time,TimeUnit.SECONDS);
             } else set(key, value);
             return true;
         } catch (Exception e) {
@@ -139,11 +138,17 @@ public class RedisUtil {
      * @Author xck
      * @Date 2019/9/5 13:49
      **/
-    public long incr(String key, long delta) {
+    public long incr(String key, long delta,long time) {
         if (delta < 0) {
             throw new RuntimeException("递增因子必须大于0");
         }
-        return redisTemplate.opsForValue().increment(key, delta);
+        if (hasKey(key)){
+            return redisTemplate.opsForValue().increment(key, delta);
+        }
+        else {
+            set(key,0,time);
+            return redisTemplate.opsForValue().increment(key, delta);
+        }
     }
 
     /**

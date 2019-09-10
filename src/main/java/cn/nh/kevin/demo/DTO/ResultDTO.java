@@ -1,5 +1,6 @@
 package cn.nh.kevin.demo.DTO;
 
+import cn.nh.kevin.demo.Enum.MessageEnum;
 import cn.nh.kevin.demo.Enum.ResultEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,9 +16,9 @@ import lombok.Setter;
 @Setter
 public class ResultDTO {
     private ResultEnum result;
-    private String Message;
+    private MessageEnum Message;
 
-    public ResultDTO(ResultEnum result, String message) {
+    public ResultDTO(ResultEnum result, MessageEnum message) {
         this.result = result;
         this.Message = message;
     }

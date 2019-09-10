@@ -1,9 +1,7 @@
 package cn.nh.kevin.demo.Exception.DefineException;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
 /**
  * 标题: 渠道校验异常
  * 描述:
@@ -14,11 +12,14 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ChannleException extends Exception {
-    private String errorcode;
-
-    public ChannleException(String message, String errorcode) {
+public class ChannleException extends Exception{
+    private String code;
+    public ChannleException(String message, String code) {
         super(message);
-        this.errorcode = errorcode;
+        this.code = code;
+    }
+
+    public String getcode() {
+        return code;
     }
 }

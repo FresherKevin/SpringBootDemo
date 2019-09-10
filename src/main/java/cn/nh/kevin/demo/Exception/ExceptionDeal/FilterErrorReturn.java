@@ -1,6 +1,5 @@
 package cn.nh.kevin.demo.Exception.ExceptionDeal;
 
-import cn.nh.kevin.demo.DTO.ResultDTO;
 import cn.nh.kevin.demo.Enum.ResultEnum;
 import cn.nh.kevin.demo.Rest.JsonResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,8 +37,8 @@ public class FilterErrorReturn {
         response.setContentType("application/json; charset=utf-8");
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Accept-Encoding", "");
-        ResultDTO resultDTO = new ResultDTO(ResultEnum.FAIL, e.getMessage());
-        String Json = convertObjectToJson(JsonResponse.fail("88612", e.getMessage()));
+
+        String Json = convertObjectToJson(JsonResponse.build(ResultEnum.FAIL, e.getMessage()));
         ServletOutputStream outputStream = response.getOutputStream();
         outputStream.write(Json.getBytes("UTF-8"));
         outputStream.flush();

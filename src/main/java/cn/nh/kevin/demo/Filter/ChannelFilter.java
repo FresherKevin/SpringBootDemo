@@ -1,5 +1,6 @@
 package cn.nh.kevin.demo.Filter;
 
+import cn.nh.kevin.demo.Enum.MessageEnum;
 import cn.nh.kevin.demo.Exception.DefineException.ChannleException;
 import cn.nh.kevin.demo.Exception.ExceptionDeal.FilterErrorReturn;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class ChannelFilter implements Filter {
         String Channel = null;
         Channel = req.getHeader("Channel");
         if (!ChannelCheck.equals(Channel)) {
-            error.dealFilterError(req, resp, new ChannleException("非法渠道，请核实", "886"));
+            error.dealFilterError(req, resp, new ChannleException(MessageEnum.channelErrorMessage.getText(), MessageEnum.channelErrorMessage.getCode()));
             return;
         }
         filterChain.doFilter(req, resp);

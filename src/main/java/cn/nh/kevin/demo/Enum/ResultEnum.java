@@ -9,11 +9,27 @@ package cn.nh.kevin.demo.Enum;
  */
 public enum ResultEnum {
     SUCCESS("100", "成功"), FAIL("400", "失败");
-    private String num;
+    private String code;
     private String text;
 
-    ResultEnum(String tnum, String ttext) {
-        this.num = tnum;
-        this.text = ttext;
+    ResultEnum(String code, String text) {
+        this.code = code;
+        this.text = text;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

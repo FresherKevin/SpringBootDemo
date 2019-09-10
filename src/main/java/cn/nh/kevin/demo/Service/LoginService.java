@@ -2,14 +2,18 @@ package cn.nh.kevin.demo.Service;
 
 import cn.nh.kevin.demo.DTO.ResultDTO;
 import cn.nh.kevin.demo.DTO.UserDTO;
+import cn.nh.kevin.demo.Enum.MessageEnum;
 import cn.nh.kevin.demo.Enum.ResultEnum;
 import cn.nh.kevin.demo.Mapper.UserMapper;
 import cn.nh.kevin.demo.Util.Redis.RedisUtil;
+import cn.nh.kevin.demo.Util.Time.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * 标题:
@@ -21,6 +25,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginService.class);
+
+    private String BlackList = "blacklist";
+    private int max=5;
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
@@ -35,27 +42,45 @@ public class LoginService {
      * @Date 2019/8/28 15:30
      **/
     public ResultDTO check(String id, String password) {
-        String Message;
         if (id == null) {
-            Message = "账户不能为空";
-            return new ResultDTO(ResultEnum.FAIL, Message);
+            return new ResultDTO(ResultEnum.FAIL, MessageEnum.idEmptyMessage);
         } else if (password == null) {
-            Message = "密码不能为空";
-            return new ResultDTO(ResultEnum.FAIL, Message);
+            return new ResultDTO(ResultEnum.FAIL, MessageEnum.passwordEmptyMessage);
         } else {
+            if (isInBlackList(id)){
+                return new ResultDTO(ResultEnum.FAIL,MessageEnum.wrongTooMuchMessage);
+            }
             UserDTO userDTO = userMapper.findUser(id);
+            if (userDTO == null) {
+                return new ResultDTO(ResultEnum.FAIL, MessageEnum.idNotFindMessage);
+            }
             if (userDTO.getPassword().equals(password)) {
-                Message = "验证成功";
-                int count = (Integer) redisUtil.get(id);
-                LOGGER.info("失败次数{}", count);
-                return new ResultDTO(ResultEnum.SUCCESS, Message);
+                redisUtil.remove(id);
+                return new ResultDTO(ResultEnum.SUCCESS, MessageEnum.checkSuccessMessage);
             } else {
-                Message = "密码错误";
-                redisUtil.set(id, 1);
-                return new ResultDTO(ResultEnum.FAIL, Message);
+                redisUtil.incr(id, 1,1);
+                if ((int)redisUtil.get(id)>max){
+                    redisUtil.remove(id);
+                    long currentTime = System.currentTimeMillis() + 1 * 60 * 1000;
+                    Date date = new Date(currentTime);
+                    redisUtil.hset(BlackList,id,TimeUtil.date2String(date));
+                }
+                return new ResultDTO(ResultEnum.FAIL, MessageEnum.passwordErrorMessage);
             }
         }
     }
+    public boolean isInBlackList(String id){
+        String time = ((String) redisUtil.hashGet(BlackList, id));
+        if (time==null) return false;
+        String timeNow = TimeUtil.date2String(new Date());
+
+        if(TimeUtil.timeCompare(time,timeNow)){
+            redisUtil.hdel(BlackList,id);
+            return false;
+        }
+        else return true;
+    }
+
 
     /**
      * @param userDTO

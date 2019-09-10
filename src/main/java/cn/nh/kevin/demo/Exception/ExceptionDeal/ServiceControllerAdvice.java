@@ -1,6 +1,7 @@
 package cn.nh.kevin.demo.Exception.ExceptionDeal;
 
 import cn.nh.kevin.demo.DTO.ResultDTO;
+import cn.nh.kevin.demo.Enum.MessageEnum;
 import cn.nh.kevin.demo.Enum.ResultEnum;
 import cn.nh.kevin.demo.Exception.DefineException.ChannleException;
 import org.slf4j.Logger;
@@ -22,8 +23,8 @@ public class ServiceControllerAdvice {
 
     @ResponseBody
     @ExceptionHandler({ChannleException.class})
-    public ResultDTO exceptionHandle(Exception e) {
+    public ResultDTO exceptionHandle(ChannleException e) {
         LOGGER.info("Channel异常处理");
-        return new ResultDTO(ResultEnum.FAIL, e.getMessage());
+        return new ResultDTO(ResultEnum.FAIL, MessageEnum.getMessageEnumByCode(e.getcode()));
     }
 }

@@ -9,7 +9,6 @@ import cn.nh.kevin.demo.Service.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,38 +20,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * 标题:用户登录注册控制器
+ * 标题: 用户登录 纯后端
  * 描述:
  * 版权: Kevin
  * 作者: xck
- * 时间: 2019-08-26 19:01
+ * 时间: 2019-09-06 10:24
  */
-@EnableAutoConfiguration
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/admin")
+public class AdminController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private LoginService loginService;
 
     @RequestMapping("/index")
-    public ModelAndView getInfo() {
-        return new ModelAndView("index");
+    public JsonResponse<ResultDTO> getInfo() {
+        return JsonResponse.success(new ResultDTO(ResultEnum.SUCCESS, MessageEnum.indexMessage));
     }
 
     //@ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ModelAndView login(@RequestBody UserDTO user, HttpServletRequest request) {
+    public JsonResponse login(@RequestBody UserDTO user, HttpServletRequest request) {
         LOGGER.info("session is {}", request.getSession().getId());
         String id = user.getId();
         String password = user.getPassword();
-        if (loginService.check(id, password).getResult().equals(ResultEnum.SUCCESS)) {
+        ResultDTO resultDTO = loginService.check(id,password);
+        if (resultDTO.getResult().equals(ResultEnum.SUCCESS)) {
             HttpSession session = request.getSession();
             LOGGER.info("session是否缓存{}", session.getAttribute("user") == null);
             session.setAttribute("user", user);
             LOGGER.info("id:{}", user.getId());
-            return new ModelAndView("main");
-        } else return new ModelAndView("error");
+            return JsonResponse.build(ResultEnum.SUCCESS,resultDTO.getMessage().getText());
+        } else return JsonResponse.build(ResultEnum.FAIL,resultDTO.getMessage());
     }
 
     @RequestMapping(value = "/main")
@@ -72,7 +71,7 @@ public class UserController {
             try {
                 loginService.register(userDTO);
             } catch (DuplicateKeyException e) {
-                return JsonResponse.build(ResultEnum.FAIL, MessageEnum.idConflictMessage);
+                return JsonResponse.build(ResultEnum.FAIL,MessageEnum.idConflictMessage);
             } catch (Exception e) {
                 return JsonResponse.build(ResultEnum.FAIL, MessageEnum.registerFailMessage);
             }
@@ -80,9 +79,11 @@ public class UserController {
         } else return JsonResponse.build(ResultEnum.FAIL, MessageEnum.inputEmptyMessage);
     }
 
-
     @RequestMapping(value = "/query", method = RequestMethod.GET)
     public JsonResponse<UserDTO> queryById(String id) {
-        return JsonResponse.success(loginService.queryById(id));
+        UserDTO userDTO = loginService.queryById(id);
+        if (userDTO!=null)
+        return JsonResponse.success(userDTO);
+        else return JsonResponse.build(ResultEnum.FAIL,MessageEnum.idNotFindMessage);
     }
 }
