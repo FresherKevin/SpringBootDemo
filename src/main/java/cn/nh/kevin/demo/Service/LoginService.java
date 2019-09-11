@@ -26,8 +26,12 @@ import java.util.Date;
 public class LoginService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginService.class);
 
-    private String BlackList = "blacklist";
-    private int max=5;
+    private String blackList = "blacklist";
+    private int max = 5;
+    private long keyOnceExpreTime = 60;
+    private long blackKeyExpireTime = 1 * 60 * 1000;
+    private long delta = 1;
+
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
@@ -47,8 +51,8 @@ public class LoginService {
         } else if (password == null) {
             return new ResultDTO(ResultEnum.FAIL, MessageEnum.passwordEmptyMessage);
         } else {
-            if (isInBlackList(id)){
-                return new ResultDTO(ResultEnum.FAIL,MessageEnum.wrongTooMuchMessage);
+            if (isInBlackList(id)) {
+                return new ResultDTO(ResultEnum.FAIL, MessageEnum.wrongTooMuchMessage);
             }
             UserDTO userDTO = userMapper.findUser(id);
             if (userDTO == null) {
@@ -58,27 +62,27 @@ public class LoginService {
                 redisUtil.remove(id);
                 return new ResultDTO(ResultEnum.SUCCESS, MessageEnum.checkSuccessMessage);
             } else {
-                redisUtil.incr(id, 1,1);
-                if ((int)redisUtil.get(id)>max){
+                redisUtil.incr(id, delta, keyOnceExpreTime);
+                if ((int) redisUtil.get(id) > max) {
                     redisUtil.remove(id);
-                    long currentTime = System.currentTimeMillis() + 1 * 60 * 1000;
+                    long currentTime = System.currentTimeMillis() + blackKeyExpireTime;
                     Date date = new Date(currentTime);
-                    redisUtil.hset(BlackList,id,TimeUtil.date2String(date));
+                    redisUtil.hset(blackList, id, TimeUtil.date2String(date));
                 }
                 return new ResultDTO(ResultEnum.FAIL, MessageEnum.passwordErrorMessage);
             }
         }
     }
-    public boolean isInBlackList(String id){
-        String time = ((String) redisUtil.hashGet(BlackList, id));
-        if (time==null) return false;
+
+    public boolean isInBlackList(String id) {
+        String time = ((String) redisUtil.hashGet(blackList, id));
+        if (time == null) return false;
         String timeNow = TimeUtil.date2String(new Date());
 
-        if(TimeUtil.timeCompare(time,timeNow)){
-            redisUtil.hdel(BlackList,id);
+        if (TimeUtil.timeCompare(time, timeNow)) {
+            redisUtil.hdel(blackList, id);
             return false;
-        }
-        else return true;
+        } else return true;
     }
 
 

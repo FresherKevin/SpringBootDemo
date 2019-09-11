@@ -36,6 +36,7 @@ public class RedisUtil {
             remove(key);
         }
     }
+
     /**
      * @param key
      * @return void
@@ -48,6 +49,7 @@ public class RedisUtil {
             redisTemplate.delete(key);
         }
     }
+
     /**
      * @param key
      * @return boolean
@@ -58,6 +60,7 @@ public class RedisUtil {
     public boolean hasKey(String key) {
         return redisTemplate.hasKey(key);
     }
+
     /**
      * @param key
      * @param time
@@ -109,6 +112,7 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @param value
@@ -121,7 +125,7 @@ public class RedisUtil {
     public boolean set(String key, Object value, long time) {
         try {
             if (time > 0) {
-                redisTemplate.opsForValue().set(key, value, time,TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
             } else set(key, value);
             return true;
         } catch (Exception e) {
@@ -134,21 +138,32 @@ public class RedisUtil {
      * @param key
      * @param delta
      * @return long
-     * @Description 递增
+     * @Description 递增   并设置失效时间
      * @Author xck
      * @Date 2019/9/5 13:49
      **/
-    public long incr(String key, long delta,long time) {
+    public long incr(String key, long delta, long time) {
         if (delta < 0) {
             throw new RuntimeException("递增因子必须大于0");
         }
-        if (hasKey(key)){
-            return redisTemplate.opsForValue().increment(key, delta);
+        long returnValue = redisTemplate.opsForValue().increment(key, delta);
+        expire(key, time);
+        return returnValue;
+    }
+
+    /**
+     * @param key
+     * @param delta
+     * @return long
+     * @Description 递增
+     * @Author xck
+     * @Date 2019/9/11 14:53
+     **/
+    public long incr(String key, long delta) {
+        if (delta < 0) {
+            throw new RuntimeException("递增因子必须大于0");
         }
-        else {
-            set(key,0,time);
-            return redisTemplate.opsForValue().increment(key, delta);
-        }
+        return redisTemplate.opsForValue().increment(key, delta);
     }
 
     /**
@@ -244,12 +259,13 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @param item
      * @param value
      * @return boolean
-     * @Description  向一张hash表中放入数据,如果不存在将创建
+     * @Description 向一张hash表中放入数据, 如果不存在将创建
      * @Author xck
      * @Date 2019/9/5 14:18
      **/
@@ -262,13 +278,14 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @param item
      * @param value
      * @param time
      * @return boolean
-     * @Description  向一张hash表中放入数据,如果不存在将创建
+     * @Description 向一张hash表中放入数据, 如果不存在将创建
      * @Author xck
      * @Date 2019/9/5 14:18
      **/
@@ -284,6 +301,7 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @param item
@@ -307,7 +325,7 @@ public class RedisUtil {
     public boolean hHasKey(String key, String item) {
         return redisTemplate.opsForHash().hasKey(key, item);
     }
-    
+
     /**
      * @param key
      * @param item
@@ -350,6 +368,7 @@ public class RedisUtil {
             return null;
         }
     }
+
     /**
      * @param key
      * @param values
@@ -366,6 +385,7 @@ public class RedisUtil {
             return 0;
         }
     }
+
     /**
      * @param key
      * @param value
@@ -382,6 +402,7 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @param time
@@ -402,6 +423,7 @@ public class RedisUtil {
             return 0;
         }
     }
+
     /**
      * @param key
      * @return long
@@ -417,6 +439,7 @@ public class RedisUtil {
             return 0;
         }
     }
+
     /**
      * @param key
      * @param values
@@ -453,6 +476,7 @@ public class RedisUtil {
             return null;
         }
     }
+
     /**
      * @param key
      * @param value
@@ -470,6 +494,7 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @param value
@@ -490,6 +515,7 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @param value
@@ -507,6 +533,7 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @param value
@@ -515,7 +542,7 @@ public class RedisUtil {
      * @Author xck
      * @Date 2019/9/5 14:41
      **/
-    public boolean lSet(String key, List<Object> value,long time) {
+    public boolean lSet(String key, List<Object> value, long time) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             if (time > 0)
@@ -526,6 +553,7 @@ public class RedisUtil {
             return false;
         }
     }
+
     /**
      * @param key
      * @return long
@@ -541,12 +569,13 @@ public class RedisUtil {
             return 0;
         }
     }
+
     /**
      * @param key
      * @param index
      * @param value
      * @return boolean
-     * @Description  根据索引修改list中的某条数据
+     * @Description 根据索引修改list中的某条数据
      * @Author xck
      * @Date 2019/9/5 14:42
      **/
@@ -578,6 +607,7 @@ public class RedisUtil {
             return 0;
         }
     }
+
     /**
      * @param key
      * @param index
