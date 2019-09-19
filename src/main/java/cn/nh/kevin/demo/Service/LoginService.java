@@ -105,6 +105,7 @@ public class LoginService {
                 LOGGER.error("注册id={}异常", userDTO.getId());
             }
         }
+
         return ResultEnum.SUCCESS;
     }
 
